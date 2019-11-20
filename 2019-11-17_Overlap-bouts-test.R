@@ -123,3 +123,5 @@ counting <- AB %>%
 counting %>%
   group_by(first) %>%
   tally()
+
+

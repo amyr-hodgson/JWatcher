@@ -67,3 +67,8 @@ all_test <- lapply(all_monkeys, join_files)
 all_test2 <- bind_rows(all_test)
 write.csv(all_test2, "2019-11-17_Testdata.csv")
 
+fam6 <- list.files(pattern = "*.dat")
+f6join <- lapply(fam6, join_files)
+f6join <- bind_rows(f6join) %>%
+  filter(family == 6)
+write.csv(f6join, "2019-11-20_fam6.csv")

@@ -47,7 +47,7 @@ timeline <- function(df, scale = 100, type = 'button') {
     filter(button == "EOF") %>% 
     distinct(ts)
   
-  time <- as.data.frame(rep(1:(ses_len$ts*ses_no$ses))) %>% # creating timeline
+  time <- as.data.frame(rep(0:(ses_len$ts*ses_no$ses))) %>% # creating timeline
     rename(ts_adj = 1) 
   
   df <- rowid_to_column(df, var = "rowid") # stop spread() complaining
@@ -213,3 +213,179 @@ ggplot(data = adjusted, aes(
 
 # may want to have dataset with onset and offset times rather than 
 # value for each second? 
+
+# other families
+
+df5 <- read_csv("2019-11-21_fam5.csv") %>% 
+  select(-X1) %>% 
+  rename(button = key)
+
+df5 <- timeline(df5, scale = 1000, type = 'location_coded') %>%
+  arrange(ts_adj)
+
+df5 <- df5 %>%
+  gather(key = 'monkey', value = 'loc', Alderaan, Scout, Zinc, Zircon, Quantum, Quartz)
+
+
+df5 <- df5 %>%
+  mutate(
+    DOB =
+      case_when(
+        monkey == "Alderaan" ~ "2016-06-28",
+        monkey == "Scout" ~ "2016-08-12",
+        monkey == "Zinc" | monkey == "Zircon" ~ "2019-01-02",
+        monkey == "Quantum" |
+          monkey == "Quartz" ~ "2019-06-09"
+      )
+    ) %>%
+  mutate(test_day = "2019-09-26")
+
+df5$age <-
+  difftime(as.Date(df5$test_day), as.Date(df5$DOB), units = "weeks") /
+  52.25
+
+df5 <- df5 %>%
+  mutate(
+    dev_stage =
+      case_when(
+        (age * 12) > 20 ~ "Adult",
+        (age * 12) > 14 &
+          (age * 12) < 20 ~ "Late Adolescent",
+        (age * 12) < 14 & (age * 12) > 8 ~ "Early Adolescent",
+        (age * 12) > 4 & (age * 12) < 8 ~ "Older Infant",
+        (age * 12) < 4 ~ "Young Infant"
+      )
+  )
+
+
+df5$dev_stage <- factor(
+  df5$dev_stage,
+  levels = c("Adult", "Late Adolescent", "Early Adolescent", "Older Infant", "Young Infant"),
+  labels = c(
+    "Adult",
+    "Late Adol.",
+    "Early Adol.",
+    "Older Infant",
+    "Young Infant"
+  )
+)
+
+mycol <- c("#e6194B", "#f58231", "#ffe119", "#3cb44b", "#4363d8")
+
+names(mycol) <- levels(df5$dev_stage)
+colScale <- scale_color_manual(name = "dev_stage",values = mycol)
+
+df5$monkey <- factor(df5$monkey, levels = c("Alderaan", "Scout", "Zinc", "Zircon", "Quantum", "Quartz"))
+
+ggplot(data = df5, aes(
+  x = ts_adj,
+  y = loc,
+  colour = dev_stage
+)) +
+  geom_point(size = .02) +
+  geom_line(size = .5) +
+  colScale +
+  facet_grid(monkey ~.)
+
+df5$monkeyrev <- factor(df5$monkey, levels = c("Quartz", "Quantum", "Zircon","Zinc", "Scout", "Alderaan"))
+
+df5$locrev <- factor(df5$loc, levels = c("3","2","1","0"))
+
+ggplot(data = df5, aes(
+  x = monkeyrev,
+  y = ts_adj,
+  colour = dev_stage
+)) +
+  geom_point(size = 1) +
+  # geom_line() +
+  colScale  + 
+  facet_grid(locrev~ .) + 
+  coord_flip()
+
+
+df3 <- read_csv("2019-11-20_fam3.csv") %>% 
+  select(-X1) %>% 
+  rename(button = key)
+
+df3 <- timeline(df3, scale = 1000, type = 'location_coded') %>%
+  arrange(ts_adj)
+
+df3 <- df3 %>%
+  gather(key = 'monkey', value = 'loc', Rafeky, Shiba, Mountain, Field, Chalk, Coal, Malachite)
+
+
+df3 <- df3 %>%
+  mutate(
+    DOB =
+      case_when(
+        monkey == "Rafeky" ~ "2010-10-09",
+        monkey == "Shiba" ~ "2018-03-19",
+        monkey == "Mountain" | monkey == "Field" ~ "2018-08-20",
+        monkey == "Chalk" |
+          monkey == "Coal" ~ "2019-01-25",
+        monkey == "Malachite" ~ "2019-07-01"
+      )
+  ) %>%
+  mutate(test_day = "2019-09-12")
+
+df3$age <-
+  difftime(as.Date(df3$test_day), as.Date(df3$DOB), units = "weeks") /
+  52.25
+
+df3 <- df3 %>%
+  mutate(
+    dev_stage =
+      case_when(
+        (age * 12) > 20 ~ "Adult",
+        (age * 12) > 14 &
+          (age * 12) < 20 ~ "Late Adolescent",
+        (age * 12) < 14 & (age * 12) > 8 ~ "Early Adolescent",
+        (age * 12) > 4 & (age * 12) < 8 ~ "Older Infant",
+        (age * 12) < 4 ~ "Young Infant"
+      )
+  )
+
+
+df3$dev_stage <- factor(
+  df3$dev_stage,
+  levels = c("Adult", "Late Adolescent", "Early Adolescent", "Older Infant", "Young Infant"),
+  labels = c(
+    "Adult",
+    "Late Adol.",
+    "Early Adol.",
+    "Older Infant",
+    "Young Infant"
+  )
+)
+
+mycol <- c("#e6194B", "#f58231", "#ffe119", "#3cb44b", "#4363d8")
+
+names(mycol) <- levels(df3$dev_stage)
+colScale <- scale_color_manual(name = "dev_stage",values = mycol)
+
+df3$monkey <- factor(df3$monkey, levels = c("Rafeky", "Shiba", "Mountain", "Field", "Chalk", "Coal", "Malachite"))
+
+ggplot(data = df3, aes(
+  x = ts_adj,
+  y = loc,
+  colour = dev_stage
+)) +
+  geom_point(size = .02) +
+  geom_line(size = .5) +
+  colScale +
+  facet_grid(monkey ~.)
+
+df3$monkeyrev <- factor(df3$monkey, levels = c("Malachite", "Coal", "Chalk", "Field", "Mountain", "Shiba", "Rafeky"))
+
+df3$locrev <- factor(df3$loc, levels = c("2","1","0"))
+
+ggplot(data = df3, aes(
+  x = monkeyrev,
+  y = ts_adj,
+  colour = dev_stage
+)) +
+  geom_point(size = 1) +
+  colScale  + 
+  facet_grid(locrev~ .) + 
+  coord_flip()
+

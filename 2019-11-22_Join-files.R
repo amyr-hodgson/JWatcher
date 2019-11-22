@@ -1,26 +1,37 @@
-# Function to join JWatcher files when a scoring session has been split up into
-# several blocks. Specifically, when Novel Object scoring has been split into 3
-# x 10 minute scoring sessions. This function deals with the .dat files, which
-# are needed to get the timestamps for each transition to a new state for each
-# monkey.
 
-# wd = Data_files in Primate_social/Novel_object
+# join_files function takes one argument- file 
+# Returns processed file, or list of files when used with lapply
+# File should have: 
+# 
+# A column for each answered question
+# Two timestamp (ts) columns, one adjusted for scoring session number (ts_adj)
+# A column for key pressed (button)
+
+######################
+### Example of use ###
+######################
+
+# Set working directory to directory containing files you want to process
+
+# Load packages needed
 
 library(tidyverse)
 
-# Function takes one argument- file or list of files
+# Define function
 
 join_files <- function(file) {
   
-  data_full <- read.delim(file, header = F) # full version to get session number
+  data_full <-
+    read.delim(file, header = F) # full version to get session number
+  
   data_ts <- read.delim(file,
                         skip = 24,
                         header = F,
                         sep = ",") %>%
-    rename(ts = 1, key = 2) # version with just data
+    rename(ts = 1, button = 2) # version with just data
   
-  data_ts$key <- as.character(data_ts$key) # key as character
-  data_ts$key <- gsub('\\s+', '', data_ts$key) # get rid of leading space in key column
+  data_ts$button <- as.character(data_ts$button) # key as character
+  data_ts$button <- gsub('\\s+', '', data_ts$button) # get rid of leading space in key column
   
   questions <-
     slice(data_full, 15:20) # get rows with answers to questions
@@ -48,7 +59,7 @@ join_files <- function(file) {
   full <-
     bind_cols(dfs_joined, data_ts) # join data df with data to df with answers
   
-  ses_dur <- full %>% filter(key == "EOF") # extract session duration
+  ses_dur <- full %>% filter(button == "EOF") # extract session duration
   
   full_adj <- full %>% mutate(ts_adj =
                                 case_when(
@@ -62,25 +73,14 @@ join_files <- function(file) {
   return(full_adj)
 }
 
-all_monkeys <- list.files(pattern = "*.dat")
-all_test <- lapply(all_monkeys, join_files)
-all_test2 <- bind_rows(all_test)
-write.csv(all_test2, "2019-11-17_Testdata.csv")
+all <- list.files(pattern = "*.dat") # Lists files ending with .dat in current directory
+join <- lapply(all, join_files) # Applies function to this list of files, returns processed list
+all_joined <- bind_rows(join) # Binds processed files together
 
-fam6 <- list.files(pattern = "*.dat")
-f6join <- lapply(fam6, join_files)
-f6join <- bind_rows(f6join) %>%
-  filter(family == 6)
-write.csv(f6join, "2019-11-20_fam6.csv")
-
-fam5 <- list.files(pattern = "*.dat")
-f5join <- lapply(fam5, join_files)
-f5join <- bind_rows(f5join) %>%
-  filter(family == 5)
-write.csv(f5join, "2019-11-21_fam5.csv")
-
-fam3 <- list.files(pattern = "*.dat")
-f3join <- lapply(fam3, join_files)
-f3join <- bind_rows(f3join) %>%
+fam3 <- all_joined %>% # If you want to save specific family
   filter(family == 3)
-write.csv(f3join, "2019-11-20_fam3.csv")
+
+# Then can create .csv file 
+
+write.csv(fam3, "2019-11-22_Family3.csv")
+

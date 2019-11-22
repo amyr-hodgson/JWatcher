@@ -93,7 +93,7 @@ df <- read_csv("2019-11-22_Family3.csv") %>%
 fam3_timeline <-
   timeline(df = df, scale = 1000, type = 'location_coded')
 
-# If want the data in long format (one column for each monkey) for e.g. graphs
+# If want the data in long format (one column for all monkeys) for e.g. graphs
 
 fam3_timeline_long <- fam3_timeline %>%
   gather(

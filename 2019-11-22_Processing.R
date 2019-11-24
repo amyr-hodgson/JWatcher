@@ -147,3 +147,42 @@ fam6_timeline <- timeline(df = df6, scale = 1000, type = 'location_coded')
 write.csv(fam3_timeline, "2019-11-22_Family3_timeline.csv")
 write.csv(fam5_timeline, "2019-11-22_Family5_timeline.csv")
 write.csv(fam6_timeline, "2019-11-22_Family6_timeline.csv")
+
+# Adding DOB to joined version
+
+f5 <- read_csv("2019-11-22_Family5.csv") %>%
+  select(-X1)
+
+f5 <- f5 %>%
+  mutate(
+    DOB =
+      case_when(
+        monkey == "Alderaan" ~ "2016-06-28",
+        monkey == "Scout" ~ "2016-08-12",
+        monkey == "Zinc" | monkey == "Zircon" ~ "2019-01-02",
+        monkey == "Quantum" |
+          monkey == "Quartz" ~ "2019-06-09"
+      )
+  ) %>%
+  mutate(test_day = "2019-09-26")
+
+write.csv(f5, "2019-11-24_Family5-DOB.csv")
+
+f6 <- read_csv("2019-11-22_Family6.csv") %>%
+  select(-X1)
+
+f6 <- f6 %>%
+  mutate(
+    DOB =
+      case_when(
+        monkey == "Ackbar" ~ "2016-01-16",
+        monkey == "Bouncer" ~ "2016-05-17",
+        monkey == "Spaniel" ~ "2018-06-28",
+        monkey == "Papillon"
+        | monkey == "Poodle" ~ "2018-11-29",
+        monkey == "Nugget" | monkey == "Ninja" ~ "2019-05-02"
+      ),
+    test_day = "2019-10-24"
+  )
+
+write.csv(f6, "2019-11-24_Family6-DOB.csv")

@@ -70,7 +70,7 @@ fam6 <- all_joined %>%
 
 # Then can create .csv file 
 
-write.csv(fam3, "2019-11-22_Family3.csv")
+write.csv(fam3, "2019-11-26_Family3.csv")
 write.csv(fam5, "2019-11-22_Family5.csv")
 write.csv(fam6, "2019-11-22_Family6.csv")
 
@@ -129,8 +129,12 @@ timeline <- function(df, scale = 1000, type = 'button') {
   return(joined)
 }
 
-df3 <- read_csv("2019-11-22_Family3.csv") %>% 
+df3 <- read_csv("2019-11-26_Family3.csv") %>% 
    select(-X1) 
+
+df3_1 <- read_csv("2019-11-26_Family3.csv") %>% 
+  select(-X1) %>%
+  filter(test == "1")
 
 df5 <- read_csv("2019-11-22_Family5.csv") %>% 
   select(-X1)
@@ -140,11 +144,14 @@ df6 <- read_csv("2019-11-22_Family6.csv") %>%
 
 fam3_timeline <- timeline(df = df3, scale = 1000, type = 'location_coded')
 
+fam3_timeline_1 <- timeline(df = df3_1, scale = 1000, type = 'location_coded')
+
 fam5_timeline <- timeline(df = df5, scale = 1000, type = 'location_coded')
 
 fam6_timeline <- timeline(df = df6, scale = 1000, type = 'location_coded')
 
-write.csv(fam3_timeline, "2019-11-22_Family3_timeline.csv")
+write.csv(fam3_timeline, "2019-11-26_Family3_timeline.csv")
+write.csv(fam3_timeline_1, "2019-11-26_Family3_timeline_1.csv")
 write.csv(fam5_timeline, "2019-11-22_Family5_timeline.csv")
 write.csv(fam6_timeline, "2019-11-22_Family6_timeline.csv")
 
@@ -186,3 +193,22 @@ f6 <- f6 %>%
   )
 
 write.csv(f6, "2019-11-24_Family6-DOB.csv")
+
+###
+  
+df3 <- read_csv("2019-11-26_Family3.csv") %>% 
+  select(-X1) %>%
+  filter(test == "pilot")
+
+df3_1 <- read_csv("2019-11-26_Family3.csv") %>% 
+  select(-X1) %>%
+  filter(test == "1")
+
+# .5 second resolution
+fam3_timeline_pilot <- timeline(df = df3, scale = 500, type = 'location_coded')
+fam3_timeline_test1 <- timeline(df = df3_1, scale = 500, type = 'location_coded')
+
+write.csv(fam3_timeline_pilot, "2019-11-27_Family3_pilot_TL_halfsec.csv")
+write.csv(fam3_timeline_test1, "2019-11-27_Family3_test1_TL_halfsec.csv")
+
+

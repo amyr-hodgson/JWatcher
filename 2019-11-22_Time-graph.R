@@ -68,15 +68,15 @@ mycol <- c("#e6194B", "#f58231", "#ffe119", "#3cb44b", "#4363d8")
 
 ##### 
 
-family3 <- read_csv("2019-11-22_Family3_timeline.csv") %>% 
+family3 <- read_csv("2019-11-26_Family3_timeline_1.csv") %>% 
   select(-X1)
 
 family3 <- family3 %>%
   gather(
     key = 'monkey',
     value = 'loc',
-    Rafeky, Shiba, Mountain, Field, Chalk, Coal, Malachite
-  )
+    Rafeky, Mountain, Field, Chalk, Coal, Malachite
+  ) # Shiba, 
 
 family3 <- family3 %>%
   mutate(
@@ -90,7 +90,7 @@ family3 <- family3 %>%
         monkey == "Malachite" ~ "2019-07-01"
       )
   ) %>%
-  mutate(test_day = "2019-09-12")
+  mutate(test_day = "2019-11-19")
 
 family3 <- st_age(family3)
 
@@ -111,7 +111,7 @@ family3$monkey <-
     family3$monkey,
     levels = c(
       "Rafeky",
-      "Shiba",
+     # "Shiba",
       "Mountain",
       "Field",
       "Chalk",
@@ -128,13 +128,16 @@ family3$monkeyrev <-
       "Chalk",
       "Field",
       "Mountain",
-      "Shiba",
+    #  "Shiba",
       "Rafeky"
     )
   )
 
-family3$locrev <- factor(family3$loc, levels = c("2", "1", "0"), 
-                         labels = c("Radius", "Shelf", "Away"))
+family3$locrev <- factor(family3$loc, levels = c("3", "2", "1", "0"), 
+                         labels = c("Touch", "Radius", "Shelf", "Away"))
+# family3$locrev <- factor(family3$loc, levels = c("2", "1", "0"), 
+#                          labels = c("Radius", "Shelf", "Away"))
+
 
 names(mycol) <- levels(family3$Stage)
 colScale <- scale_color_manual(name = "Stage",values = mycol)
@@ -252,10 +255,12 @@ colScale <- scale_color_manual(name = "Stage",values = mycol)
 
 #####
 
-time_graph(family3) + geom_vline(xintercept = 1)
-time_graph(family5)
-time_graph(family6) + geom_vline(xintercept = 241)
+time_graph(family3)# + geom_vline(xintercept = 6)
+time_graph(family5) + geom_vline(xintercept = 184)
+time_graph(family6) + geom_vline(xintercept = 162) +
+  geom_vline(xintercept = 121, linetype = 'dashed')
 
-rainbow(family3)+ geom_hline(yintercept = 1)
-rainbow(family5)
-rainbow(family6)+ geom_hline(yintercept = 241)
+rainbow(family3)#+ geom_hline(yintercept = 6)
+rainbow(family5)+ geom_hline(yintercept = 184)
+rainbow(family6)+ geom_hline(yintercept = 162)+
+  geom_hline(yintercept = 121, linetype = 'dashed')

@@ -59,6 +59,16 @@ all <- list.files(pattern = "*.dat") # Lists files ending with .dat in current d
 join <- lapply(all, join_files) # Applies function to this list of files, returns processed list
 all_joined <- bind_rows(join) # Binds processed files together
 
+write.csv(all_joined, "2019-12-01_All-joined.csv")
+
+DOB <- read_csv("2019-12-01_MonkeyDOB.csv") %>%
+  rename(monkey = Monkey) %>%
+  select(-Family)
+
+all_DOB <- inner_join(all_joined, DOB, by = "monkey")
+
+write.csv(all_DOB, "2019-12-01_All-joined-DOB.csv")
+
 fam3 <- all_joined %>% 
   filter(family == 3)
 
@@ -216,11 +226,27 @@ df3_1 <- read_csv("2019-11-26_Family3.csv") %>%
   select(-X1) %>%
   filter(test == "1")
 
+df4 <- read_csv("2019-11-28_Family4.csv") %>% 
+  select(-X1)
+
+df5 <- read_csv("2019-11-22_Family5.csv") %>% 
+  select(-X1)
+
+df6 <- read_csv("2019-11-22_Family6.csv") %>% 
+  select(-X1)
+
 # .5 second resolution
 fam3_timeline_pilot <- timeline(df = df3, scale = 500, type = 'location_coded')
 fam3_timeline_test1 <- timeline(df = df3_1, scale = 500, type = 'location_coded')
+fam4_timeline_pilot <- timeline(df = df4, scale = 500, type = 'location_coded')
+fam5_timeline_pilot <- timeline(df = df5, scale = 500, type = 'location_coded')
+fam6_timeline_pilot <- timeline(df = df6, scale = 500, type = 'location_coded')
+
 
 write.csv(fam3_timeline_pilot, "2019-11-27_Family3_pilot_TL_halfsec.csv")
 write.csv(fam3_timeline_test1, "2019-11-27_Family3_test1_TL_halfsec.csv")
+write.csv(fam4_timeline_pilot, "2019-12-01_Family4_pilot_TL_halfsec.csv")
+write.csv(fam5_timeline_pilot, "2019-12-01_Family5_pilot_TL_halfsec.csv")
+write.csv(fam6_timeline_pilot, "2019-12-01_Family6_pilot_TL_halfsec.csv")
 
 

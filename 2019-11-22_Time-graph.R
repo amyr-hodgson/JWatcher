@@ -253,14 +253,96 @@ names(mycol) <- levels(family6$Stage)
 colScale <- scale_color_manual(name = "Stage",values = mycol)
 
 
+
+#####
+
+family4 <- read_csv("2019-11-28_Family4_timeline_sec.csv") %>% 
+  select(-X1)
+
+family4 <- family4 %>%
+  gather(
+    key = 'monkey',
+    value = 'loc',
+    Slim, Chunk, Saluki, Samoyed, Obsidian, Onyx, Rock, Mineral
+  )  
+
+family4 <- family4 %>%
+  mutate(
+    DOB =
+      case_when(
+        monkey == "Slim" ~ "2014-11-08",
+        monkey == "Chunk" ~ "2014-05-08",
+        monkey == "Saluki" | monkey == "Samoyed" ~ "2018-08-17",
+        monkey == "Obsidian" |
+          monkey == "Onyx" ~ "2019-01-21",
+        monkey == "Rock" | monkey == "Mineral" ~ "2019-06-27"
+      )
+  ) %>%
+  mutate(test_day = "2019-09-19")
+
+family4 <- st_age(family4)
+
+family4$Stage <- factor(
+  family4$Stage,
+  levels = c("Adult", "Late Adolescent", "Early Adolescent", "Older Infant", "Young Infant"),
+  labels = c(
+    "Adult",
+    "Late Adol.",
+    "Early Adol.",
+    "Older Infant",
+    "Young Infant"
+  )
+)
+
+family4$monkey <-
+  factor(
+    family4$monkey,
+    levels = c(
+      "Slim",
+      "Chunk",
+      "Saluki",
+      "Samoyed",
+      "Obsidian",
+      "Onyx",
+      "Rock",
+      "Mineral"
+    )
+  )
+family4$monkeyrev <-
+  factor(
+    family4$monkey,
+    levels = c(
+      "Mineral",
+      "Rock",
+      "Onyx",
+      "Obsidian",
+      "Samoyed",
+      "Saluki",
+      "Chunk",
+      "Slim"
+    )
+  )
+
+family4$locrev <- factor(family4$loc, levels = c("3", "2", "1", "0"), 
+                         labels = c("Touch", "Radius", "Shelf", "Away"))
+# family3$locrev <- factor(family3$loc, levels = c("2", "1", "0"), 
+#                          labels = c("Radius", "Shelf", "Away"))
+
+
+names(mycol) <- levels(family4$Stage)
+colScale <- scale_color_manual(name = "Stage",values = mycol)
+
+
 #####
 
 time_graph(family3)# + geom_vline(xintercept = 6)
 time_graph(family5) + geom_vline(xintercept = 184)
 time_graph(family6) + geom_vline(xintercept = 162) +
   geom_vline(xintercept = 121, linetype = 'dashed')
+time_graph(family4)
 
 rainbow(family3)#+ geom_hline(yintercept = 6)
 rainbow(family5)+ geom_hline(yintercept = 184)
 rainbow(family6)+ geom_hline(yintercept = 162)+
   geom_hline(yintercept = 121, linetype = 'dashed')
+rainbow(family4)

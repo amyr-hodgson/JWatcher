@@ -158,7 +158,7 @@ alone2 <- function(data, column, name) {
   
   total_approach <-
     data %>% filter(column != 0) %>% summarise(tot = sum(column))
-  
+  # could change sum(column) bit above to nrows(column) to allow weighting by app type?
   only_monkeys <-
     animal_nonzero %>% select(-ses,-button,-object,-test,-scorer,-family,-ts_adj)
   

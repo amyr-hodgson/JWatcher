@@ -68,11 +68,16 @@ fam5 <- all_joined %>%
 fam6 <- all_joined %>% 
   filter(family == 6)
 
+fam4 <-  all_joined %>% 
+  filter(family == 4)
+
 # Then can create .csv file 
 
 write.csv(fam3, "2019-11-26_Family3.csv")
 write.csv(fam5, "2019-11-22_Family5.csv")
 write.csv(fam6, "2019-11-22_Family6.csv")
+write.csv(fam4, "2019-11-28_Family4.csv")
+
 
 # Timeline version
 
@@ -142,6 +147,9 @@ df5 <- read_csv("2019-11-22_Family5.csv") %>%
 df6 <- read_csv("2019-11-22_Family6.csv") %>% 
   select(-X1)
 
+df4 <- read_csv("2019-11-28_Family4.csv") %>%
+  select(-X1)
+
 fam3_timeline <- timeline(df = df3, scale = 1000, type = 'location_coded')
 
 fam3_timeline_1 <- timeline(df = df3_1, scale = 1000, type = 'location_coded')
@@ -150,10 +158,14 @@ fam5_timeline <- timeline(df = df5, scale = 1000, type = 'location_coded')
 
 fam6_timeline <- timeline(df = df6, scale = 1000, type = 'location_coded')
 
+fam4_timeline <- timeline(df = df4, scale = 1000, type = 'location_coded')
+
 write.csv(fam3_timeline, "2019-11-26_Family3_timeline.csv")
 write.csv(fam3_timeline_1, "2019-11-26_Family3_timeline_1.csv")
 write.csv(fam5_timeline, "2019-11-22_Family5_timeline.csv")
 write.csv(fam6_timeline, "2019-11-22_Family6_timeline.csv")
+write.csv(fam4_timeline, "2019-11-28_Family4_timeline_sec.csv")
+
 
 # Adding DOB to joined version
 

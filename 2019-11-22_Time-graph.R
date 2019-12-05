@@ -335,11 +335,51 @@ colScale <- scale_color_manual(name = "Stage",values = mycol)
 
 #####
 
+
+family9 <- read_csv("2019-12-02_Family9_timeline_sec.csv") %>% 
+  select(-X1)
+
+family9 <- family9 %>%
+  gather(
+    key = 'monkey',
+    value = 'loc',
+    Puerto, Napa, Arsenic, Asbestos, Fusion, Flux
+  )  
+
+DOB <- read_csv("2019-12-01_MonkeyDOB.csv")
+DOB <- DOB %>% select(-Family) %>% rename(monkey = Monkey)
+
+family9 <- inner_join(family9, DOB, by = "monkey") %>%
+  mutate(test_day = "2019-11-21")
+
+family9 <- st_age(family9)
+
+family9$Stage <- factor(
+  family9$Stage,
+  levels = c("Adult", "Late Adolescent", "Early Adolescent", "Older Infant", "Young Infant"),
+  labels = c(
+    "Adult",
+    "Late Adol.",
+    "Early Adol.",
+    "Older Infant",
+    "Young Infant"
+  )
+)
+
+family9$monkey <-
+  factor(
+    family9$monkey,
+    levels = c(
+      "Puerto", "Napa", "Arsenic", "Asbestos", "Fusion", "Flux"
+    )
+  )
+
 time_graph(family3)# + geom_vline(xintercept = 6)
 time_graph(family5) + geom_vline(xintercept = 184)
 time_graph(family6) + geom_vline(xintercept = 162) +
   geom_vline(xintercept = 121, linetype = 'dashed')
 time_graph(family4)
+time_graph(family9)
 
 rainbow(family3)#+ geom_hline(yintercept = 6)
 rainbow(family5)+ geom_hline(yintercept = 184)

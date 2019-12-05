@@ -90,24 +90,27 @@ fam5 <- read_csv("2019-11-22_Family5_timeline.csv") %>%
   select(-X1)
 fam6 <- read_csv("2019-11-22_Family6_timeline.csv") %>%
   select(-X1)
+fam9 <- read_csv("2019-12-02_Family9_timeline_sec.csv") %>%
+  select(-X1)
+
+colScale <- scale_color_manual(name = "Stage", values = mycol)
 
 monkeys3 <- c("Rafeky", "Mountain", "Field", "Chalk", "Coal", "Malachite")
 
 f3 <- line_prep(fam3, 
-                split_into = 18, 
+                split_into = 3, 
                 monkey_names = monkeys3, 
                 DOB = DOB,
                 testday = "2019-11-19")
 
 names(mycol) <- levels(f3$Stage)
-colScale <- scale_color_manual(name = "Stage", values = mycol)
 
 time_graph(f3)
 
 monkeys3p <- c("Rafeky", "Shiba", "Mountain", "Field", "Chalk", "Coal", "Malachite")
 
 f3p <- line_prep(fam3_pilot, 
-                split_into = 18, 
+                split_into = 6, 
                 monkey_names = monkeys3p, 
                 DOB = DOB,
                 testday = "2019-09-12")
@@ -120,7 +123,7 @@ time_graph(f3p)
 monkeys4 <- c("Chunk", "Slim", "Saluki", "Samoyed", "Obsidian", "Onyx", "Rock", "Mineral")
 
 f4 <- line_prep(fam4, 
-                 split_into = 18, 
+                 split_into = 2, 
                  monkey_names = monkeys4, 
                  DOB = DOB,
                  testday = "2019-09-19")
@@ -132,7 +135,7 @@ time_graph(f4)
 monkeys5 <- c("Alderaan", "Scout", "Zinc", "Zircon", "Quantum", "Quartz")
 
 f5 <- line_prep(fam5, 
-                split_into = 18, 
+                split_into = 2, 
                 monkey_names = monkeys5, 
                 DOB = DOB,
                 testday = "2019-09-26")
@@ -144,7 +147,7 @@ time_graph(f5)
 monkeys6 <- c("Ackbar", "Bouncer", "Spaniel", "Papillon", "Poodle", "Nugget", "Ninja")
 
 f6 <- line_prep(fam6, 
-                split_into = 18, 
+                split_into = 2, 
                 monkey_names = monkeys6, 
                 DOB = DOB,
                 testday = "2019-10-24")
@@ -152,3 +155,15 @@ f6 <- line_prep(fam6,
 names(mycol) <- levels(f6$Stage)
 
 time_graph(f6)
+
+monkeys9 <- c("Puerto", "Napa", "Arsenic", "Asbestos", "Fusion", "Flux")
+
+f9 <- line_prep(fam9, 
+                split_into = 2, 
+                monkey_names = monkeys9, 
+                DOB = DOB,
+                testday = "2019-11-21")
+
+names(mycol) <- levels(f9$Stage)
+
+time_graph(f9)

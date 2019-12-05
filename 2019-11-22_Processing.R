@@ -59,7 +59,7 @@ all <- list.files(pattern = "*.dat") # Lists files ending with .dat in current d
 join <- lapply(all, join_files) # Applies function to this list of files, returns processed list
 all_joined <- bind_rows(join) # Binds processed files together
 
-write.csv(all_joined, "2019-12-01_All-joined.csv")
+write.csv(all_joined, "2019-12-02_All-joined.csv")
 
 DOB <- read_csv("2019-12-01_MonkeyDOB.csv") %>%
   rename(monkey = Monkey) %>%
@@ -67,7 +67,7 @@ DOB <- read_csv("2019-12-01_MonkeyDOB.csv") %>%
 
 all_DOB <- inner_join(all_joined, DOB, by = "monkey")
 
-write.csv(all_DOB, "2019-12-01_All-joined-DOB.csv")
+write.csv(all_DOB, "2019-12-02_All-joined-DOB.csv")
 
 fam3 <- all_joined %>% 
   filter(family == 3)
@@ -81,13 +81,16 @@ fam6 <- all_joined %>%
 fam4 <-  all_joined %>% 
   filter(family == 4)
 
+fam9 <- all_joined %>% 
+  filter(family == 9)
+
 # Then can create .csv file 
 
-write.csv(fam3, "2019-11-26_Family3.csv")
+#write.csv(fam3, "2019-11-26_Family3.csv")
 write.csv(fam5, "2019-11-22_Family5.csv")
 write.csv(fam6, "2019-11-22_Family6.csv")
 write.csv(fam4, "2019-11-28_Family4.csv")
-
+write.csv(fam9, "2019-12-02_Family9.csv")
 
 # Timeline version
 
@@ -145,7 +148,8 @@ timeline <- function(df, scale = 1000, type = 'button') {
 }
 
 df3 <- read_csv("2019-11-26_Family3.csv") %>% 
-   select(-X1) 
+   select(-X1) %>%
+  filter(test == "pilot")
 
 df3_1 <- read_csv("2019-11-26_Family3.csv") %>% 
   select(-X1) %>%
@@ -160,6 +164,9 @@ df6 <- read_csv("2019-11-22_Family6.csv") %>%
 df4 <- read_csv("2019-11-28_Family4.csv") %>%
   select(-X1)
 
+df9 <- read_csv("2019-12-02_Family9.csv") %>%
+  select(-X1)
+
 fam3_timeline <- timeline(df = df3, scale = 1000, type = 'location_coded')
 
 fam3_timeline_1 <- timeline(df = df3_1, scale = 1000, type = 'location_coded')
@@ -170,12 +177,37 @@ fam6_timeline <- timeline(df = df6, scale = 1000, type = 'location_coded')
 
 fam4_timeline <- timeline(df = df4, scale = 1000, type = 'location_coded')
 
+fam9_timeline <- timeline(df = df9, scale = 1000, type = 'location_coded')
+
+
 write.csv(fam3_timeline, "2019-11-26_Family3_timeline.csv")
 write.csv(fam3_timeline_1, "2019-11-26_Family3_timeline_1.csv")
 write.csv(fam5_timeline, "2019-11-22_Family5_timeline.csv")
 write.csv(fam6_timeline, "2019-11-22_Family6_timeline.csv")
 write.csv(fam4_timeline, "2019-11-28_Family4_timeline_sec.csv")
+write.csv(fam9_timeline, "2019-12-02_Family9_timeline_sec.csv")
 
+# Timeline with seconds/10
+
+fam3_timeline_10 <- timeline(df = df3, scale = 100, type = 'location_coded')
+
+fam3_timeline_1_10 <- timeline(df = df3_1, scale = 100, type = 'location_coded')
+
+fam5_timeline_10 <- timeline(df = df5, scale = 100, type = 'location_coded')
+
+fam6_timeline_10 <- timeline(df = df6, scale = 100, type = 'location_coded')
+
+fam4_timeline_10 <- timeline(df = df4, scale = 100, type = 'location_coded')
+
+fam9_timeline_10 <- timeline(df = df9, scale = 100, type = 'location_coded')
+
+
+write.csv(fam3_timeline_10, "2019-12-05_Family3_timeline_10thsec.csv")
+write.csv(fam3_timeline_1_10, "2019-12-05_Family3_timeline_1_10thsec.csv")
+write.csv(fam5_timeline_10, "2019-12-05_Family5_timeline_10thsec.csv")
+write.csv(fam6_timeline_10, "2019-12-05_Family6_timeline_10thsec.csv")
+write.csv(fam4_timeline_10, "2019-12-05_Family4_timeline_10thsec.csv")
+write.csv(fam9_timeline_10, "2019-12-05_Family9_timeline_10thsec.csv")
 
 # Adding DOB to joined version
 
@@ -235,12 +267,16 @@ df5 <- read_csv("2019-11-22_Family5.csv") %>%
 df6 <- read_csv("2019-11-22_Family6.csv") %>% 
   select(-X1)
 
+df9 <- read_csv("2019-12-02_Family9.csv") %>% 
+  select(-X1)
+
 # .5 second resolution
 fam3_timeline_pilot <- timeline(df = df3, scale = 500, type = 'location_coded')
 fam3_timeline_test1 <- timeline(df = df3_1, scale = 500, type = 'location_coded')
 fam4_timeline_pilot <- timeline(df = df4, scale = 500, type = 'location_coded')
 fam5_timeline_pilot <- timeline(df = df5, scale = 500, type = 'location_coded')
 fam6_timeline_pilot <- timeline(df = df6, scale = 500, type = 'location_coded')
+fam9_timeline_pilot <- timeline(df = df9, scale = 500, type = 'location_coded')
 
 
 write.csv(fam3_timeline_pilot, "2019-11-27_Family3_pilot_TL_halfsec.csv")
@@ -248,5 +284,6 @@ write.csv(fam3_timeline_test1, "2019-11-27_Family3_test1_TL_halfsec.csv")
 write.csv(fam4_timeline_pilot, "2019-12-01_Family4_pilot_TL_halfsec.csv")
 write.csv(fam5_timeline_pilot, "2019-12-01_Family5_pilot_TL_halfsec.csv")
 write.csv(fam6_timeline_pilot, "2019-12-01_Family6_pilot_TL_halfsec.csv")
+write.csv(fam9_timeline_pilot, "2019-12-02_Family9_pilot_TL_halfsec.csv")
 
 

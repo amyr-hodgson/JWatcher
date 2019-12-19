@@ -69,7 +69,31 @@ time_graph1 <- function(data) {
   
   return(p)
 }
-
+# axes
+time_graph1 <- function(data) {
+  p <- ggplot(data = data, aes(
+    x = index,
+    y = Approach,
+    color = Stage,
+    group = Monkey
+  )) + 
+    #  geom_point(colour = 'black', size = .8) +
+    # geom_point(size = .4) +
+    geom_line(color = 'black', size = 2, lineend = "round") +
+    geom_line(size = 1.5, lineend = "round") +
+    colScale +
+    #  theme_bw()+
+    labs(x = "Time Interval", y = "Approach Score")+
+    coord_cartesian(xlim = c(1, as.numeric(max(data$index))), ylim = c(0, 500)) +
+    scale_x_continuous(breaks = seq(0, as.numeric(max(data$index)), 1))+
+    scale_y_continuous(breaks = seq(0, 500, 50))+
+    expand_limits(y = 0) +
+    theme(axis.title.x = element_text(size = 14),
+          axis.title.y = element_text(size = 14),
+          axis.text = element_text(size = 12))
+  
+  return(p)
+}
 
 line_prep <- function(data, split_into, monkey_names, DOB, testday) {
   
@@ -147,7 +171,7 @@ names(mycol) <- levels(f3p$Stage)
 
 time_graph1(f3p)
 
-ggsave(filename = "fam3_6bins.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam3_scale.png", width = 10, height = 5, dpi = 300, type = "cairo")
 
 monkeys4 <- c("Chunk", "Slim", "Saluki", "Samoyed", "Obsidian", "Onyx", "Rock", "Mineral")
 
@@ -161,7 +185,7 @@ names(mycol) <- levels(f4$Stage)
 
 time_graph1(f4)
 
-ggsave(filename = "fam4_6bins.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam4_scale.png", width = 10, height = 5, dpi = 300, type = "cairo")
 
 
 monkeys5 <- c("Alderaan", "Scout", "Zinc", "Zircon", "Quantum", "Quartz")
@@ -176,7 +200,7 @@ names(mycol) <- levels(f5$Stage)
 
 time_graph1(f5)
 
-ggsave(filename = "fam5_6bins.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam5_scale.png", width = 10, height = 5, dpi = 300, type = "cairo")
 
 monkeys6 <- c("Ackbar", "Bouncer", "Spaniel", "Papillon", "Poodle", "Nugget", "Ninja")
 
@@ -190,7 +214,7 @@ names(mycol) <- levels(f6$Stage)
 
 time_graph1(f6)
 
-ggsave(filename = "fam6_6bins.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam6_scale.png", width = 10, height = 5, dpi = 300, type = "cairo")
 
 monkeys9 <- c("Puerto", "Napa", "Arsenic", "Asbestos", "Fusion", "Flux")
 
@@ -204,4 +228,4 @@ names(mycol) <- levels(f9$Stage)
 
 time_graph1(f9)
 
-ggsave(filename = "fam9_6bins.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam9_scale.png", width = 10, height = 5, dpi = 300, type = "cairo")

@@ -41,8 +41,13 @@ time_graph <- function(df) {
     facet_grid(monkey ~.)+
     coord_cartesian(ylim = c(0, 3.1)) +
     scale_y_continuous(breaks = seq(0, 3.1, 1), labels = abbrev_y) +
-    theme(panel.spacing = unit(.5, "lines")) +
-    labs(x = "Time (seconds)", y = "Location")
+    scale_x_continuous(breaks = seq(0, 1800, 300),labels = c(0,5,10,15,20,25,30)) +
+    theme(panel.spacing = unit(.4, "lines")) +
+    labs(x = "Time (minutes)", y = "Location") +
+    theme(axis.title.x = element_text(size = 14),
+          axis.title.y = element_text(size = 14),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 11))
   
   return(p)
 }
@@ -68,15 +73,15 @@ mycol <- c("#e6194B", "#f58231", "#ffe119", "#3cb44b", "#4363d8")
 
 ##### 
 
-family3 <- read_csv("2019-11-26_Family3_timeline_1.csv") %>% 
+family3 <- read_csv("2019-11-26_Family3_timeline.csv") %>% 
   select(-X1)
 
 family3 <- family3 %>%
   gather(
     key = 'monkey',
     value = 'loc',
-    Rafeky, Mountain, Field, Chalk, Coal, Malachite
-  ) # Shiba, 
+    Rafeky, Shiba, Mountain, Field, Chalk, Coal, Malachite
+  ) #  
 
 family3 <- family3 %>%
   mutate(
@@ -90,7 +95,7 @@ family3 <- family3 %>%
         monkey == "Malachite" ~ "2019-07-01"
       )
   ) %>%
-  mutate(test_day = "2019-11-19")
+  mutate(test_day = "2019-09-12")
 
 family3 <- st_age(family3)
 
@@ -111,7 +116,7 @@ family3$monkey <-
     family3$monkey,
     levels = c(
       "Rafeky",
-     # "Shiba",
+      "Shiba",
       "Mountain",
       "Field",
       "Chalk",
@@ -140,7 +145,7 @@ family3$locrev <- factor(family3$loc, levels = c("3", "2", "1", "0"),
 
 
 names(mycol) <- levels(family3$Stage)
-colScale <- scale_color_manual(name = "Stage",values = mycol)
+colScale <- scale_color_manual(name = "Stage",values = mycol, drop = F)
 
 
 
@@ -250,7 +255,7 @@ family6$locrev <- factor(family6$loc, levels = c("3", "2", "1", "0"),
                          labels = c("Touch", "Radius", "Shelf", "Away"))
 
 names(mycol) <- levels(family6$Stage)
-colScale <- scale_color_manual(name = "Stage",values = mycol)
+colScale <- scale_color_manual(name = "Stage",values = mycol, drop = F)
 
 
 
@@ -375,11 +380,18 @@ family9$monkey <-
   )
 
 time_graph(family3)# + geom_vline(xintercept = 6)
-time_graph(family5) + geom_vline(xintercept = 184)
-time_graph(family6) + geom_vline(xintercept = 162) +
+time_graph(family5) #+ geom_vline(xintercept = 184)
+time_graph(family6) #+ geom_vline(xintercept = 162) +
   geom_vline(xintercept = 121, linetype = 'dashed')
 time_graph(family4)
 time_graph(family9)
+
+ggsave(filename = "fam3_ts.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam5_ts.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam6_ts.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam4_ts.png", width = 10, height = 6, dpi = 300, type = "cairo")
+ggsave(filename = "fam9_ts.png", width = 10, height = 6, dpi = 300, type = "cairo")
+
 
 rainbow(family3)#+ geom_hline(yintercept = 6)
 rainbow(family5)+ geom_hline(yintercept = 184)
